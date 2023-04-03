@@ -84,7 +84,7 @@ where
         Pair::Public::from_string(uri)?
     };
 
-    if Pair::verify(&signature, &message, &pubkey) {
+    if Pair::verify(&signature, message, &pubkey) {
         println!("Signature verifies correctly.");
     } else {
         return Err(error::Error::SignatureInvalid);

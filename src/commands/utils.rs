@@ -72,7 +72,7 @@ pub fn print_from_uri<Pair>(
     Pair::Public: Into<MultiSigner>,
 {
     let password = password.as_ref().map(|s| s.expose_secret().as_str());
-    if let Ok((pair, seed)) = Pair::from_phrase(uri, password.clone()) {
+    if let Ok((pair, seed)) = Pair::from_phrase(uri, password) {
         let public_key = pair.public();
         let network_override = unwrap_or_default_ss58_version(network_override);
 
@@ -111,7 +111,7 @@ pub fn print_from_uri<Pair>(
                 );
             }
         }
-    } else if let Ok((pair, seed)) = Pair::from_string_with_seed(uri, password.clone()) {
+    } else if let Ok((pair, seed)) = Pair::from_string_with_seed(uri, password) {
         let public_key = pair.public();
         let network_override = unwrap_or_default_ss58_version(network_override);
 

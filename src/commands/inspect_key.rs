@@ -91,15 +91,15 @@ impl InspectKeyCmd {
                 self.crypto_scheme.scheme,
                 print_from_public(
                     &uri,
-                    self.network_scheme.network.clone(),
-                    self.output_scheme.output_type.clone(),
+                    self.network_scheme.network,
+                    self.output_scheme.output_type,
                 )
             )?;
         } else {
             if let Some(ref expect_public) = self.expect_public {
                 with_crypto_scheme!(
                     self.crypto_scheme.scheme,
-                    expect_public_from_phrase(&&expect_public, &uri, password.as_ref(),)
+                    expect_public_from_phrase(expect_public, &uri, password.as_ref(),)
                 )?;
             }
 
@@ -108,8 +108,8 @@ impl InspectKeyCmd {
                 print_from_uri(
                     &uri,
                     password,
-                    self.network_scheme.network.clone(),
-                    self.output_scheme.output_type.clone(),
+                    self.network_scheme.network,
+                    self.output_scheme.output_type,
                 )
             );
         }
@@ -131,7 +131,7 @@ fn expect_public_from_phrase<Pair: sp_core::Pair>(
 ) -> Result<(), Error> {
     let secret_uri = SecretUri::from_str(suri).map_err(|e| format!("{:?}", e))?;
     let expected_public = if let Some(public) = expect_public.strip_prefix("0x") {
-        let hex_public = hex::decode(&public)
+        let hex_public = hex::decode(public)
             .map_err(|_| format!("Invalid expected public key hex: `{}`", expect_public))?;
         Pair::Public::try_from(&hex_public)
             .map_err(|_| format!("Invalid expected public key: `{}`", expect_public))?
@@ -144,7 +144,7 @@ fn expect_public_from_phrase<Pair: sp_core::Pair>(
     let pair = Pair::from_string_with_seed(
         secret_uri.phrase.expose_secret().as_str(),
         password
-            .or_else(|| secret_uri.password.as_ref())
+            .or(secret_uri.password.as_ref())
             .map(|p| p.expose_secret().as_str()),
     )
     .map_err(|_| format!("Invalid secret uri: {}", suri))?

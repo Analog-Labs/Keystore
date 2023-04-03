@@ -65,7 +65,7 @@ impl SignWithCmd {
 
         let signature = sign(
             keystore.clone(),
-            key_type.clone(),
+            key_type,
             &self.crypto_scheme,
             key,
             message,
@@ -92,16 +92,16 @@ fn sign(
                 <sp_core::ecdsa::Pair as Pair>::Public::from_string(key)?
             };
 
-            let signature = SyncCryptoStore::sign_with(
+            
+
+            SyncCryptoStore::sign_with(
                 &*keystore,
                 key_type,
                 &pubkey.to_public_crypto_pair(),
                 &message,
             )
             .unwrap()
-            .unwrap();
-
-            signature
+            .unwrap()
         }
         crate::params::CryptoScheme::Sr25519 => {
             let pubkey = if let Ok(pubkey_vec) = hex::decode(key) {
@@ -111,16 +111,16 @@ fn sign(
                 <sp_core::sr25519::Pair as Pair>::Public::from_string(key)?
             };
 
-            let signature = SyncCryptoStore::sign_with(
+            
+
+            SyncCryptoStore::sign_with(
                 &*keystore,
                 key_type,
                 &pubkey.to_public_crypto_pair(),
                 &message,
             )
             .unwrap()
-            .unwrap();
-
-            signature
+            .unwrap()
         }
         crate::params::CryptoScheme::Ed25519 => {
             let pubkey = if let Ok(pubkey_vec) = hex::decode(key) {
@@ -130,16 +130,16 @@ fn sign(
                 <sp_core::ed25519::Pair as Pair>::Public::from_string(key)?
             };
 
-            let signature = SyncCryptoStore::sign_with(
+            
+
+            SyncCryptoStore::sign_with(
                 &*keystore,
                 key_type,
                 &pubkey.to_public_crypto_pair(),
                 &message,
             )
             .unwrap()
-            .unwrap();
-
-            signature
+            .unwrap()
         }
     };
 
